@@ -3,7 +3,7 @@ from btpeer import *
 class TranslatorNode(BTPeer):
     def __init__(self,maxpeers,serverport,neighbourport,id,nid):
         BTPeer.__init__(self,maxpeers,serverport,myid=id)
-        self.region = "EU"
+        self.region = "GR"
         self.requests={}
         handlers={
             "TRAN":self.translate,
@@ -22,7 +22,7 @@ class TranslatorNode(BTPeer):
 
     def main(self):
         self.mainloop()
-node = TranslatorNode(100,1234,1111,"B","C")
+node = TranslatorNode(100,1212,2121,"C","D")
 node.main()
 
 

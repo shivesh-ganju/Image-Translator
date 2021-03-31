@@ -34,7 +34,7 @@ class BTPeer:
         Internet host like Google.
 
         """
-        self.debug = True
+        self.debug = 0
 
         self.maxpeers = int(maxpeers)
         self.serverport = int(serverport)
@@ -85,6 +85,7 @@ class BTPeer:
         self.__debug('Connected ' + str(clientsock.getpeername()))
 
         host, port = clientsock.getpeername()
+        print(clientsock.getpeername())
         peerconn = BTPeerConnection(None, host, port, clientsock, debug=False)
 
         try:
@@ -343,7 +344,7 @@ class BTPeer:
 
         while not self.shutdown:
             try:
-                self.__debug('Listening for connections...')
+                #self.__debug('Listening for connections...')
                 clientsock, clientaddr = s.accept()
                 clientsock.settimeout(None)
 
@@ -383,6 +384,8 @@ class BTPeerConnection:
 
         self.id = peerid
         self.debug = debug
+        self.testHost = host
+        self.testPort=port
 
         if not sock:
             self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -400,6 +403,7 @@ class BTPeerConnection:
         #m = {"type":msgtype,"data":msgdata}
         #msg = pickle.dumps(m)
         msg = str(msgtype)+"-"+str(msgdata)
+        print(msg)
         return msg
 
     # --------------------------------------------------------------------------
