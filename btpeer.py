@@ -34,7 +34,7 @@ class BTPeer:
         Internet host like Google.
 
         """
-        self.debug = True
+        self.debug = 0
 
         self.maxpeers = int(maxpeers)
         self.serverport = int(serverport)

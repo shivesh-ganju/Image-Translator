@@ -6,7 +6,7 @@ from config import TRANSLATION_CONFIG
 class TranslatorNode(BTPeer):
     def __init__(self,maxpeers,serverport,neighbourport,id,nid):
         BTPeer.__init__(self,maxpeers,serverport)
-        self.region = "ES"
+        self.region = "IT"
         self.requests={}
         handlers={
             "TRAN":self.handle_translate,
@@ -35,7 +35,7 @@ class TranslatorNode(BTPeer):
         subscription_key = 'bfcfe92f1fa842e6a5cf95f622345b2c'
         endpoint = "https://api.cognitive.microsofttranslator.com/"
         path = '/translate?api-version=3.0'
-        params = '&from=en&to=es'
+        params = '&from=en&to=it'
         constructed_url = endpoint + path + params
         headers = {
             'Ocp-Apim-Subscription-Key': subscription_key,
@@ -57,5 +57,5 @@ class TranslatorNode(BTPeer):
 
     def main(self):
         self.mainloop()
-node = TranslatorNode(100,TRANSLATION_CONFIG["A"][1],TRANSLATION_CONFIG["B"][1],"A","B")
+node = TranslatorNode(100,TRANSLATION_CONFIG["D"][1],TRANSLATION_CONFIG["A"][1],"D","A")
 node.main()

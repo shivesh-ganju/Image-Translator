@@ -24,7 +24,7 @@ class TranslatorNode(BTPeer):
     def main(self):
         data = create_translation_request_message(1,self.myid,"ES",self.myid,"Translate this sentence in french")
         data=json.dumps(data)
-        self.connectandsend('localhost',1111,"TRAN",data,pid="B",waitreply=False)
+        self.connectandsend('52.70.238.225',1111,"TRAN",data,pid="B",waitreply=False)
         self.mainloop()
 
 a = TranslatorNode(100,4321,4444,"A","D")
