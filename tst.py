@@ -1,4 +1,5 @@
 from btpeer import *
+from utils import *
 import json
 class TranslatorNode(BTPeer):
     def __init__(self,maxpeers,serverport,neighbourport,id,nid):
@@ -18,14 +19,10 @@ class TranslatorNode(BTPeer):
         print("I am translating")
 
     def ack(self,peer,data):
-        print("I am acking")
+        print(data["message"])
 
     def main(self):
-        data={
-            "id":self.myid,
-            "port":self.serverport,
-            "msg":"Translate"
-        }
+        data = create_translation_request_message(1,self.myid,"ES",self.myid,"Translate this sentence in french")
         data=json.dumps(data)
         self.connectandsend('localhost',1111,"TRAN",data,pid="B",waitreply=False)
         self.mainloop()
