@@ -1,6 +1,7 @@
 from btpeer import *
 import os, requests, uuid, json
 from utils import *
+from config import TRANSLATION_CONFIG
 
 class TranslatorNode(BTPeer):
     def __init__(self,maxpeers,serverport,neighbourport,id,nid):
@@ -14,7 +15,7 @@ class TranslatorNode(BTPeer):
         for type in handlers.keys():
             self.addhandler(type,handlers[type])
 
-        self.addpeer(nid,'107.20.33.48',neighbourport)
+        self.addpeer(nid,TRANSLATION_CONFIG[nid][0],neighbourport)
         #self.addpeer(nid, 'localhost', neighbourport)
 
     def handle_translate(self,peerconn,translation_request):
@@ -55,5 +56,5 @@ class TranslatorNode(BTPeer):
 
     def main(self):
         self.mainloop()
-node = TranslatorNode(100,1111,1234,"B","A")
+node = TranslatorNode(100,TRANSLATION_CONFIG["B"][1],TRANSLATION_CONFIG["C"][1],"B","C")
 node.main()
