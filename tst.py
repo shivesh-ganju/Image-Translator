@@ -13,7 +13,7 @@ class TranslatorNode(BTPeer):
         for type in handlers.keys():
             self.addhandler(type,handlers[type])
 
-        self.addpeer(nid,'localhost',neighbourport)
+        #self.addpeer(nid,'localhost',neighbourport)
 
     def translate(self,peer,data):
         print("I am translating")
@@ -22,10 +22,9 @@ class TranslatorNode(BTPeer):
         print(data["message"])
 
     def main(self):
-        data = create_translation_request_message(1,self.myid,"ES",self.myid,"Translate this sentence in french")
+        data = create_translation_request_message(1,self.myid,"GR",self.myid,"Translate this sentence in french")
         data=json.dumps(data)
-        self.connectandsend('52.70.238.225',1111,"TRAN",data,pid="B",waitreply=False)
-        self.mainloop()
+        self.connectandsend('52.207.203.252',1234,"TRAN",data,pid=self.myid,waitreply=False)
 
 a = TranslatorNode(100,4321,4444,"A","D")
 a.main()
