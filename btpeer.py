@@ -34,7 +34,7 @@ class BTPeer:
         Internet host like Google.
 
         """
-        self.debug = 0
+        self.debug = False
 
         self.maxpeers = int(maxpeers)
         self.serverport = int(serverport)
@@ -282,7 +282,6 @@ class BTPeer:
         try:
             peerconn = BTPeerConnection(pid, host, port, debug=self.debug)
             peerconn.senddata(msgtype, msgdata)
-            print("Datas enr")
             self.__debug('Sent %s: %s' % (pid, msgtype))
 
             if waitreply:
