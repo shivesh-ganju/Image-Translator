@@ -5,7 +5,8 @@ def create_translation_request_message(id,sender,region,requester,text):
         "region":region,
         "requester":requester,
         "id":id,
-        "message":text
+        "message":text,
+        "type":"TRAN"
     }
     return message
 
@@ -15,6 +16,23 @@ def create_translation_response_message(translation_request,sender,translated_te
         "region":translation_request["region"],
         "requester":translation_request["requester"],
         "id":translation_request["id"],
-        "message":translated_text
+        "message":translated_text,
+        "type":"ACKT"
+    }
+    return message
+
+def create_duplicate_response():
+    message={
+        "message":"This is a duplicate request",
+        "type":"DUPL"
+    }
+    return message
+
+def create_message(sender,nodeid,nodeinfo,id,type):
+    message = {
+        "sender": sender,
+        "id": id,
+        "node_info": (nodeid,nodeinfo),
+        "type":type
     }
     return message
