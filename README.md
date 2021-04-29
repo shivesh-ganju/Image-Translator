@@ -4,7 +4,7 @@ Steps to run this on EC2
 
 1. Launch an Ec2 instance in the same region us-east-1
 
-2. Configre the security group of the EC2, add rules under Inbound like this
+2. Configure the security group of the EC2, add rules under Inbound like this
    2.1) All TCP 0-65535 0.0.0.0
    2.2) All UDP 0-65535 0.0.0.0
    3.) Assign an Elastic IP for your EC2. Available in the left tab on the EC2 Dashboard
@@ -21,4 +21,16 @@ Steps to run this on EC2
    - Translation node `python src/node_it.py`.
    - Broker node `python src/node_broker.py`
 
-TODO: Does this make sense?
+TODO: Is this correct?
+
+## Linting and formatting suggestion
+
+It will be useful for our code to be formatted in the same way, as won't pollute pull requests.
+I'm currently using `autopep8` it can be installed using:
+
+```
+pip install pep8
+pip install --upgrade autopep8
+```
+
+NOTE: I'm open to using any other linter.

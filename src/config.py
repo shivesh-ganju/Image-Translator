@@ -3,5 +3,6 @@ TRANSLATION_CONFIG = {
     "es": 1234,
     "it": 4321,
     "gr": 4444,
-    "regr": 8765
+    "regr": 8765,
+    "brkr": 1114
 }

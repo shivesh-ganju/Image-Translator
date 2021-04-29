@@ -12,8 +12,8 @@ class TranslatorNode(BTPeer):
             "TRAN": self.translate,
             "ACKN": self.ack
         }
-        for h_type in handlers.keys():
-            self.addhandler(h_type, handlers[h_type])
+        for m_type in handlers.keys():
+            self.addhandler(m_type, handlers[m_type])
 
         # self.addpeer(nid,'localhost',neighbourport)
 

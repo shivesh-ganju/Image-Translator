@@ -27,10 +27,10 @@ class BrokerNode(BTPeer):
             "REGR": self.handle_register_reply,
             "DISR": self.handle_discovery_reply
         }
-        for h_type in handlers.keys():
-            self.addhandler(h_type, handlers[h_type])
+        for m_type in handlers.keys():
+            self.addhandler(m_type, handlers[m_type])
 
-    # Question: I shoudl not have to change any of teh handle register methods?
+    # TODO: Question, I shoudl not have to change any of teh handle register methods?
     def handle_register_reply(self, peerconn, register_reply):
         print("I am ready to serve")
         register_reply = json.loads(register_reply)
@@ -153,6 +153,17 @@ class BrokerNode(BTPeer):
         self.mainloop()
 
 
+# TODO: What port should be used, currently chose a TCP, UDP compatible port.
+# Should localhost always use registartion server port.
+
 node = BrokerNode(
-    100, TRANSLATION_CONFIG["it"], "it", 'localhost:'+str(TRANSLATION_CONFIG["regr"]))
+    100, TRANSLATION_CONFIG["brkr"], "brkr", 'localhost:' + str(TRANSLATION_CONFIG["regr"]))
 node.main()
+
+
+"""
+TODO:
+
+1. Could you show me how you test and run everything locally?
+2. Ask questions above.
+"""
