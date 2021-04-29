@@ -16,8 +16,8 @@ class RegisterationServer(BTPeer):
             #"DUPL":self.handle_duplicate,
             "REGR": self.handle_forward
         }
-        for type in handlers.keys():
-            self.addhandler(type,handlers[type])
+        for h_type in handlers.keys():
+            self.addhandler(h_type, handlers[h_type])
         self.nodes={}
 
     def handle_register(self,peerconn,registration_request):

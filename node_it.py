@@ -17,8 +17,8 @@ class TranslatorNode(BTPeer):
             "REGR": self.handle_register_reply,
             "DISR":self.handle_discovery_reply
         }
-        for type in handlers.keys():
-            self.addhandler(type,handlers[type])
+        for h_type in handlers.keys():
+            self.addhandler(h_type,handlers[h_type])
 
 
     def handle_register_reply(self,peerconn,register_reply):
