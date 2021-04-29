@@ -28,11 +28,11 @@ def create_duplicate_response():
     }
     return message
 
-def create_message(sender,nodeid,nodeinfo,id,type):
+def create_message(sender,nodeid,nodeinfo,id,m_type):
     message = {
         "sender": sender,
         "id": id,
         "node_info": (nodeid,nodeinfo),
-        "type":type
+        "type": m_type
     }
     return message

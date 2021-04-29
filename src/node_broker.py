@@ -6,6 +6,9 @@ import uuid
 import json
 from config import TRANSLATION_CONFIG
 import random
+from collections import deque
+
+# TODO: NOT done just started.
 
 
 class BrokerNode(BTPeer):
@@ -15,9 +18,11 @@ class BrokerNode(BTPeer):
         self.requests = set()
         self.name = name
         self.register_server = register_server
+        self.Q = deque()
+
         handlers = {
-            "TRAN": self.handle_translate,
-            "ACKT": self.handle_translation_response,
+            "BINT": self.handle_interface_broker,
+            "BTCR": self.handle_transcription_broker,
             "DISC": self.handle_discovery,
             "REGR": self.handle_register_reply,
             "DISR": self.handle_discovery_reply
@@ -25,6 +30,7 @@ class BrokerNode(BTPeer):
         for h_type in handlers.keys():
             self.addhandler(h_type, handlers[h_type])
 
+    # Question: I shoudl not have to change any of teh handle register methods?
     def handle_register_reply(self, peerconn, register_reply):
         print("I am ready to serve")
         register_reply = json.loads(register_reply)
@@ -65,6 +71,19 @@ class BrokerNode(BTPeer):
         self.requests.add(discovery_message["id"])
         print("Added peer {}".format(peerid))
         self.addpeer(peerconn, peeradd.split(":")[0], peeradd.split(":")[1])
+
+    def handle_interface_broker(self, peerconn, msg):
+        pass
+
+    def handle_transcription_broker(self, peerconn, msg):
+        pass
+
+    def update_IOT():
+        """ 
+        Will be called when a a broker node receives a message.
+        Will send state if Q to AWS so can visualize using IOT. 
+        """
+        pass
 
     def handle_translate(self, peerconn, translation_request):
         translation_request = json.loads(translation_request)

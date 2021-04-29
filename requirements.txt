@@ -1,0 +1,1 @@
+aws_solutions_constructs.aws_apigateway_io==1.100.0

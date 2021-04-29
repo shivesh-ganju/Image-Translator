@@ -1,0 +1,12 @@
+.vscode/
+.DS_Store
+node_modules/
+/*.env
+build
+/target
+cache
+artifacts
+.coverage_artifacts/
+.coverage_contracts/
+artifacts/
+coverage/
