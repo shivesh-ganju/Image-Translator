@@ -8,8 +8,6 @@ from config import TRANSLATION_CONFIG
 import random
 from collections import deque
 
-# TODO: NOT done just started.
-
 
 class BrokerNode(BTPeer):
     def __init__(self, maxpeers, serverport, name, register_server):
@@ -41,18 +39,27 @@ class BrokerNode(BTPeer):
             return
         self.requests.add(register_reply["id"])
         peerhost, peerport = peeradd.split(":")
+        # TOODO: not necessary to send self.myid twice.
         msg = create_message(self.myid, self.name, self.myid,
                              random.randint(0, 1000000), "DISC")
         self.connectandsend(peerhost, peerport, "DISC", json.dumps(
             msg), pid=self.myid, waitreply=False)
 
     def handle_discovery(self, peerconn, discovery_message):
+        """
+        peerconn: PeerConnection instance.
+        discovery_message: message data json encoded. Need to get json dump of message before read.
+        """
         discovery_message = json.loads(discovery_message)
+        # peerid = nodeid in createMessage, or self.name.
+        # peeradd = nodeinfo in create message, self.myid
+        # self.myid = '%s:%d' % (self.serverhost, self.serverport).
         peerid, peeradd = discovery_message["node_info"]
         if discovery_message["id"] in self.requests:
             return
         self.requests.add(discovery_message["id"])
         for id in self.getpeerids():
+            # Iterate though all peers and propogate discovery message of node.
             (host, port) = self.getpeer(id)
             self.connectandsend(host, port, "DISC", json.dumps(
                 discovery_message), self.myid, waitreply=False)
@@ -153,7 +160,6 @@ class BrokerNode(BTPeer):
 
 
 # TODO: What port should be used, currently chose a TCP, UDP compatible port.
-# Should localhost always use registartion server port.
 
 node = BrokerNode(
     100, TRANSLATION_CONFIG["brkr"], "brkr", 'localhost:' + str(TRANSLATION_CONFIG["regr"]))
@@ -161,8 +167,17 @@ node.main()
 
 
 """
-TODO:
+Flow:
 
-1. Could you show me how you test and run everything locally?
-2. Ask questions above.
+1. We create instance and add all handler methods for the differnet message types.
+
+2. We register node, by sending resgistartion message. We now address and port of registration server as provided in constructor. 
+
+3. We call main loop and wait for messages. 
+
+
+Questions:
+Why do for every handler do we need to define a request and response handler?
+
+
 """
