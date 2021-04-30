@@ -35,15 +35,26 @@ class BasePeer(BTPeer):
             msg), pid=self.myid, waitreply=False)
 
     def handle_discovery(self, peerconn, discovery_message):
+        """
+        peerconn: PeerConnection instance.
+        discovery_message: message data json encoded. Need to get json dump of message before read.
+        """
         discovery_message = json.loads(discovery_message)
+        # peerid = nodeid in createMessage, or self.name.
+        # peeradd = nodeinfo in create message, self.myid
+        # self.myid = '%s:%d' % (self.serverhost, self.serverport).
         peerid, peeradd = discovery_message["node_info"]
         if discovery_message["id"] in self.requests:
             return
         self.requests.add(discovery_message["id"])
         for id in self.getpeerids():
+            # Iterate though all peers and propogate discovery message of node.
+            # Will forward message, not change content. So any reply goes direct to intial node.
             (host, port) = self.getpeer(id)
             self.connectandsend(host, port, "DISC", json.dumps(
                 discovery_message), self.myid, waitreply=False)
+
+        # Send reply to initial discovery message. e.g. Send DISR reply.
         reply = create_message(self.myid, self.name,
                                self.myid, random.randint(0, 1000000), "DISR")
         self.addpeer(peerconn, peeradd.split(":")[0], peeradd.split(":")[1])
@@ -59,6 +70,7 @@ class BasePeer(BTPeer):
         print("Added peer {}".format(peerid))
         self.addpeer(peerconn, peeradd.split(":")[0], peeradd.split(":")[1])
 
+    # TODO: When message type not found need to call handle_forward.
     def handle_forward(self, peerconn, translation_request):
         msg = json.loads(translation_request)
         if msg["id"] in self.requests:
