@@ -83,21 +83,16 @@ class BrokerNode(BTPeer):
         self.addpeer(peerconn, peeradd.split(":")[0], peeradd.split(":")[1])
 
     def handle_interface_broker_request(self, peerconn, raw_msg):
-        message = json.loads(raw_msg)
-        if message["id"] in self.requests:
+
+        msg = json.loads(translation_request)
+        if msg["id"] in self.requests:
             return
 
-        # Should relay message to transcription broker.
-        self.requests.add(translation_request["id"])
-        host, port, text = translation_request['requester'].split(
-            ":")[0], translation_request['requester'].split(":")[1], translation_request['message']
-
-        translated_text = self.translate(text)
-        msg = create_translation_response_message(
-            translation_request, self.myid, translated_text)
-        cmp = json.dumps(msg)
-        self.connectandsend(host, port, "ACKN", cmp,
-                            pid=self.myid, waitreply=False)
+        self.requests.add(msg["id"])
+        for peerid in self.getpeerids():
+            (host, port) = self.getpeer(peerid)
+            self.connectandsend(host, port, "TRSC", json.dumps(
+                translation_request), pid=self.myid, waitreply=False)
 
     def handle_transcription_broker_request(self, peerconn, msg):
         pass
@@ -150,19 +145,17 @@ class BrokerNode(BTPeer):
         print(response)
         return response[0]['translations'][0]['text']
 
+    # TODO: When message type not found need to call handle_forward.
     def handle_forward(self, peerconn, translation_request):
         msg = json.loads(translation_request)
         if msg["id"] in self.requests:
             return
+
+        self.requests.add(msg["id"])
         for peerid in self.getpeerids():
-            self.requests.add(msg["id"])
             (host, port) = self.getpeer(peerid)
             self.connectandsend(host, port, msg["type"], json.dumps(
                 translation_request), pid=self.myid, waitreply=False)
-
-    def handle_translation_response(self, peerconn, translation_reponse):
-        msg = json.loads(translation_reponse)
-        print(msg["Message"])
 
     def register(self):
         host, port = self.register_server.split(":")

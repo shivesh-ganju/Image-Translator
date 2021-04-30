@@ -115,8 +115,9 @@ class TranslatorNode(BTPeer):
         msg = json.loads(translation_request)
         if msg["id"] in self.requests:
             return
+
+        self.requests.add(msg["id"])
         for peerid in self.getpeerids():
-            self.requests.add(msg["id"])
             (host, port) = self.getpeer(peerid)
             self.connectandsend(host, port, msg["type"], json.dumps(
                 translation_request), pid=self.myid, waitreply=False)

@@ -10,3 +10,4 @@ artifacts
 .coverage_contracts/
 artifacts/
 coverage/
+__pycache__
