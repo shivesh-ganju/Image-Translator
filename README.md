@@ -17,9 +17,9 @@ Steps to run this on EC2
 
    e.g.
 
-   - Registration node `python src/node_register_server`.
-   - Translation node `python src/node_it.py`.
-   - Broker node `python src/node_broker.py`
+   - Registration node `python3 src/node_register_server`.
+   - Translation node `python3 src/node_it.py`.
+   - Broker node `python3 src/node_broker.py`
 
 TODO: Is this correct?
 

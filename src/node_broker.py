@@ -30,7 +30,6 @@ class BrokerNode(BTPeer):
         for m_type in handlers.keys():
             self.addhandler(m_type, handlers[m_type])
 
-    # TODO: Question, I shoudl not have to change any of teh handle register methods?
     def handle_register_reply(self, peerconn, register_reply):
         print("I am ready to serve")
         register_reply = json.loads(register_reply)
