@@ -18,7 +18,9 @@ class RegisterationServer(BTPeer):
             "DISC": self.handle_forward,
             "REGS": self.handle_register,
             # "DUPL":self.handle_duplicate,
-            "REGR": self.handle_forward
+            "REGR": self.handle_forward,
+            "BINT": self.handle_forward,
+            "BTCR": self.handle_forward
         }
         for m_type in handlers.keys():
             self.addhandler(m_type, handlers[m_type])

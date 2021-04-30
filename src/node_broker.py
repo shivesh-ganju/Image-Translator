@@ -18,9 +18,10 @@ class BrokerNode(BTPeer):
         self.register_server = register_server
         self.Q = deque()
 
+        # Handlers defined for listining to messages.
         handlers = {
-            "BINT": self.handle_interface_broker,
-            "BTCR": self.handle_transcription_broker,
+            "BINT": self.handle_interface_broker_request,
+            "BTCR": self.handle_transcription_broker_request,
             "DISC": self.handle_discovery,
             "REGR": self.handle_register_reply,
             "DISR": self.handle_discovery_reply
@@ -31,6 +32,7 @@ class BrokerNode(BTPeer):
     def handle_register_reply(self, peerconn, register_reply):
         print("I am ready to serve")
         register_reply = json.loads(register_reply)
+        # Registration server only returns a single peer id.
         peerid, peeradd = register_reply["node_info"]
         if peerid == "unk":
             print("I am the first node in the P2P")
@@ -39,7 +41,6 @@ class BrokerNode(BTPeer):
             return
         self.requests.add(register_reply["id"])
         peerhost, peerport = peeradd.split(":")
-        # TOODO: not necessary to send self.myid twice.
         msg = create_message(self.myid, self.name, self.myid,
                              random.randint(0, 1000000), "DISC")
         self.connectandsend(peerhost, peerport, "DISC", json.dumps(
@@ -60,9 +61,12 @@ class BrokerNode(BTPeer):
         self.requests.add(discovery_message["id"])
         for id in self.getpeerids():
             # Iterate though all peers and propogate discovery message of node.
+            # Will forward message, not change content. So any reply goes direct to intial node.
             (host, port) = self.getpeer(id)
             self.connectandsend(host, port, "DISC", json.dumps(
                 discovery_message), self.myid, waitreply=False)
+
+        # Send reply to initial discovery message. e.g. Send DISR reply.
         reply = create_message(self.myid, self.name,
                                self.myid, random.randint(0, 1000000), "DISR")
         self.addpeer(peerconn, peeradd.split(":")[0], peeradd.split(":")[1])
@@ -78,13 +82,27 @@ class BrokerNode(BTPeer):
         print("Added peer {}".format(peerid))
         self.addpeer(peerconn, peeradd.split(":")[0], peeradd.split(":")[1])
 
-    def handle_interface_broker(self, peerconn, msg):
+    def handle_interface_broker_request(self, peerconn, raw_msg):
+        message = json.loads(raw_msg)
+        if message["id"] in self.requests:
+            return
+
+        # Should relay message to transcription broker.
+        self.requests.add(translation_request["id"])
+        host, port, text = translation_request['requester'].split(
+            ":")[0], translation_request['requester'].split(":")[1], translation_request['message']
+
+        translated_text = self.translate(text)
+        msg = create_translation_response_message(
+            translation_request, self.myid, translated_text)
+        cmp = json.dumps(msg)
+        self.connectandsend(host, port, "ACKN", cmp,
+                            pid=self.myid, waitreply=False)
+
+    def handle_transcription_broker_request(self, peerconn, msg):
         pass
 
-    def handle_transcription_broker(self, peerconn, msg):
-        pass
-
-    def update_IOT():
+    def update_iot():
         """ 
         Will be called when a a broker node receives a message.
         Will send state if Q to AWS so can visualize using IOT. 
@@ -172,6 +190,13 @@ Flow:
 1. We create instance and add all handler methods for the differnet message types.
 
 2. We register node, by sending resgistartion message. We now address and port of registration server as provided in constructor. 
+
+3. Registered node sends a discovery message to the peer it received. 
+
+4. It now will wait for dicovery replies from other peers. So it can addPeers().
+
+5. Peer that has recived dicovery message "DISC", propogates to all other peers. Not changing the content. 
+    Peer also resonds with a "DISR" reply.
 
 3. We call main loop and wait for messages. 
 

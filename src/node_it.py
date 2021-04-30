@@ -118,6 +118,7 @@ class TranslatorNode(BTPeer):
                 translation_request), pid=self.myid, waitreply=False)
 
     def handle_translation_response(self, peerconn, translation_reponse):
+        # TODO: Should send email to user with the data.
         msg = json.loads(translation_reponse)
         print(msg["Message"])
 

@@ -1,12 +1,16 @@
 
-def create_translation_request_message(id, sender, region, requester, text):
+def create_translation_request_message(id, sender, region, requester, text, email):
+    """
+    Only interface node will ever use create_translation_request_message.
+    """
     message = {
         "sender": sender,
         "region": region,
         "requester": requester,
         "id": id,
         "message": text,
-        "type": "TRAN"
+        "type": "TRAN",
+        "email": email
     }
     return message
 
