@@ -21,8 +21,6 @@ Steps to run this on EC2
    - Translation node `python3 src/node_it.py`.
    - Broker node `python3 src/node_broker.py`
 
-TODO: Is this correct?
-
 ## Linting and formatting suggestion
 
 It will be useful for our code to be formatted in the same way, as won't pollute pull requests.
