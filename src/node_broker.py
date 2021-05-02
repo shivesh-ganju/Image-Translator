@@ -4,34 +4,29 @@ import requests
 import json
 from config import TRANSLATION_CONFIG
 import random
-from collections import deque
-from aws_solutions_constructs.aws_apigateway_iot import ApiGatewayToIot
+from datetime import datetime
 
 
 class BrokerNode(BasePeer):
     def __init__(self, maxpeers, serverport, name, register_server):
         BasePeer.__init__(self, maxpeers, serverport, name, register_server)
-        self.Q = deque()
-        self.iotGateway = ApiGatewayToIot(self, "ApiGatewayToIotPattern", "ApiGatewayToIotPattern",
-                                          iot_endpoint="a1234567890123-ats"
-                                          )
+        self.iot_gateway_url = "https://c02zu014q2.execute-api.eu-central-1.amazonaws.com/prod/message/"
 
         # Handlers defined for listining to messages.
         handlers = {
-            "BINT": self.handle_interface_broker_request,
-            "BTCR": self.handle_transcription_broker_request,
+            "BINT": self.__handle_interface_broker_request,
+            "BTCR": self.__handle_transcription_broker_request,
         }
         for m_type in handlers.keys():
             self.addhandler(m_type, handlers[m_type])
 
-    def handle_interface_broker_request(self, peerconn, translation_request):
+    def __handle_interface_broker_request(self, peerconn, translation_request):
         msg = json.loads(translation_request)
         if msg["id"] in self.requests:
             return
 
         self.requests.add(msg["id"])
-        # TODO: implement iot update.
-        self.update_iot()
+        self.__update_iot("broker_interface", msg["id"])
 
         for peerid in self.getpeerids():
             (host, port) = self.getpeer(peerid)
@@ -39,14 +34,13 @@ class BrokerNode(BasePeer):
             self.connectandsend(host, port, "TRSC", json.dumps(
                 translation_request), pid=self.myid, waitreply=False)
 
-    def handle_transcription_broker_request(self, peerconn, translation_request):
+    def __handle_transcription_broker_request(self, peerconn, translation_request):
         msg = json.loads(translation_request)
         if msg["id"] in self.requests:
             return
 
         self.requests.add(msg["id"])
-        # TODO: Implement iot update.
-        self.update_iot()
+        self.__update_iot("broker_transcriptor", msg["id"])
 
         for peerid in self.getpeerids():
             (host, port) = self.getpeer(peerid)
@@ -54,27 +48,24 @@ class BrokerNode(BasePeer):
             self.connectandsend(host, port, "TRAN", json.dumps(
                 translation_request), pid=self.myid, waitreply=False)
 
-    def update_iot():
+    def __update_iot(self, topic, newMessageId):
         """
         Will be called when a a broker node receives a message.
-        Will send state if Q to AWS so can visualize using IOT.
-
         Will publish message to differnet topics depending on if broker or transcription message.
         """
-        subscription_key = 'bfcfe92f1fa842e6a5cf95f622345b2c'
-        endpoint = "https://api.cognitive.microsofttranslator.com/"
-        path = '/translate?api-version=3.0'
-        params = '&from=en&to=it'
-        constructed_url = endpoint + path + params
+        constructed_url = self.iot_gateway_url + topic
         headers = {
-            'Ocp-Apim-Subscription-Key': subscription_key,
-            'Ocp-Apim-Subscription-Region': 'eastus',
             'Content-type': 'application/json',
-            'X-ClientTraceId': str(uuid.uuid4())
         }
-        body = [{
-            'text': text
-        }]
+        body = [
+            {
+                "nodeid": self.myid,
+                "queue": len(self.requests),
+                "newMessageId": newMessageId,
+                "datetime": datetime.today().strftime('%Y-%m-%d-%H:%M:%S'),
+            }
+        ]
+
         request = requests.post(constructed_url, headers=headers, json=body)
         response = request.json()
         print(response)
@@ -100,6 +91,4 @@ Flow:
     Peer also responds with a "DISR" reply.
 
 3. We call main loop and wait for messages.
-
-
 """

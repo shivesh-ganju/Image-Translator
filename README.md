@@ -21,6 +21,12 @@ Steps to run this on EC2
    - Translation node `python3 src/node_it.py`.
    - Broker node `python3 src/node_broker.py`
 
+## IoT Api gateway
+
+This project makes use of an IoT API gateway. The gateway is used to captured the state of the broker nodes.
+
+The repo containing the code used to deploy the IoT gateway can be found at [trozler/image_translator_iotgateway](https://github.com/trozler/image_translator_iotgateway).
+
 ## Linting and formatting suggestion
 
 It will be useful for our code to be formatted in the same way, as won't pollute pull requests.
