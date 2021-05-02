@@ -1,4 +1,4 @@
-from btpeer import *
+from btpeer import BTPeer
 from utils import *
 import json
 import random

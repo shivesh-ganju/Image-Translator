@@ -38,3 +38,14 @@ class InterfaceNode(BasePeer):
 node = InterfaceNode(
     100, TRANSLATION_CONFIG["interface"], "interface", 'localhost:' + str(TRANSLATION_CONFIG["regr"]))
 node.main()
+
+
+"""
+How can you server HTML and JS using only a TCP/IP server?
+
+
+
+
+
+
+"""
