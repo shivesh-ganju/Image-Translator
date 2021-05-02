@@ -13,7 +13,7 @@ Steps to run this on EC2
 3. Run program as followed
    a) Run `git clone https://github.com/shivesh-ganju/Image-Translator.git`
    b) Install dependencies by running `pip install -r requirements.txt`
-   c) Run the corresponding node `.py` file.
+   c) Run the corresponding node `.py` files.
 
    e.g.
 

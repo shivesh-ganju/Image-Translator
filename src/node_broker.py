@@ -1,16 +1,18 @@
-from basepeer import *
-from utils import *
+from basepeer import BasePeer
 import requests
 import json
-from config import TRANSLATION_CONFIG
-import random
+from config import TRANSLATION_CONFIG, IOT_GATEWAY_CONFIG
 from datetime import datetime
+
+
+b_interface_topic = IOT_GATEWAY_CONFIG["b_interface_topic"]
+b_transcriptor_topic = IOT_GATEWAY_CONFIG["b_transcriptor_topic"]
 
 
 class BrokerNode(BasePeer):
     def __init__(self, maxpeers, serverport, name, register_server):
         BasePeer.__init__(self, maxpeers, serverport, name, register_server)
-        self.iot_gateway_url = "https://c02zu014q2.execute-api.eu-central-1.amazonaws.com/prod/message/"
+        self.iot_gateway_url = IOT_GATEWAY_CONFIG["url"]
 
         # Handlers defined for listining to messages.
         handlers = {
@@ -26,7 +28,7 @@ class BrokerNode(BasePeer):
             return
 
         self.requests.add(msg["id"])
-        self.__update_iot("broker_interface", msg["id"])
+        self.__update_iot(b_interface_topic, msg["id"])
 
         for peerid in self.getpeerids():
             (host, port) = self.getpeer(peerid)
@@ -40,7 +42,7 @@ class BrokerNode(BasePeer):
             return
 
         self.requests.add(msg["id"])
-        self.__update_iot("broker_transcriptor", msg["id"])
+        self.__update_iot(b_transcriptor_topic, msg["id"])
 
         for peerid in self.getpeerids():
             (host, port) = self.getpeer(peerid)
@@ -72,7 +74,7 @@ class BrokerNode(BasePeer):
 
 
 node = BrokerNode(
-    100, TRANSLATION_CONFIG["brkr"], "brkr", 'localhost:' + str(TRANSLATION_CONFIG["regr"]))
+    100, TRANSLATION_CONFIG["broker"], "broker", 'localhost:' + str(TRANSLATION_CONFIG["regr"]))
 node.main()
 
 
