@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime
 
-iot_gateway_url = "https://c02zu014q2.execute-api.eu-central-1.amazonaws.com/prod/message/"
+iot_gateway_url = "https://k3ot37muwe.execute-api.eu-central-1.amazonaws.com/prod/message/"
 
 
 def gatewayTes(topic, newMessageId):

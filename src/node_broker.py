@@ -33,8 +33,8 @@ class BrokerNode(BasePeer):
         for peerid in self.getpeerids():
             (host, port) = self.getpeer(peerid)
             # Update message type, as going to transcription node.
-            self.connectandsend(host, port, "TRSC", json.dumps(
-                translation_request), pid=self.myid, waitreply=False)
+            self.connectandsend(host, port, "TRSC",
+                                translation_request, pid=self.myid, waitreply=False)
 
     def __handle_transcription_broker_request(self, peerconn, translation_request):
         msg = json.loads(translation_request)
@@ -48,7 +48,7 @@ class BrokerNode(BasePeer):
             (host, port) = self.getpeer(peerid)
             # Update message type, as going to transcription node.
             self.connectandsend(host, port, "TRAN",
-                translation_request, pid=self.myid, waitreply=False)
+                                translation_request, pid=self.myid, waitreply=False)
 
     def __update_iot(self, topic, newMessageId):
         """
