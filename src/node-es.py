@@ -6,8 +6,7 @@ import uuid
 import json
 from config import TRANSLATION_CONFIG
 import random
-import time
-from threading import Thread,get_ident
+
 
 class TranslatorNode(BTPeer):
     def __init__(self, maxpeers, serverport, name, register_server):
@@ -25,12 +24,9 @@ class TranslatorNode(BTPeer):
         }
         for m_type in handlers.keys():
             self.addhandler(m_type, handlers[m_type])
-        #Flag to see if node has been registered or not
-        self.registered = False
 
     def handle_register_reply(self, peerconn, register_reply):
         print("I am ready to serve")
-        self.registered = True
         register_reply = json.loads(register_reply)
         peerid, peeradd = register_reply["node_info"]
         if peerid == "unk":
@@ -127,18 +123,14 @@ class TranslatorNode(BTPeer):
         print(msg["Message"])
 
     def register(self):
-        #while not self.registered:
-            host, port = self.register_server.split(":")
-            msg = create_message(self.myid, self.name, self.myid,
-                                 random.randint(0, 100000), "REGS")
-            cmp = json.dumps(msg)
-            self.connectandsend(host, port, "REGS", cmp,
-                                pid=self.myid, waitreply=False)
-            time.sleep(5)
+        host, port = self.register_server.split(":")
+        msg = create_message(self.myid, self.name, self.myid,
+                             random.randint(0, 100000), "REGS")
+        cmp = json.dumps(msg)
+        self.connectandsend(host, port, "REGS", cmp,
+                            pid=self.myid, waitreply=False)
 
     def main(self):
-        #reg_thread = Thread(target=self.register)
-        #reg_thread.start()
         self.register()
         self.mainloop()
 
