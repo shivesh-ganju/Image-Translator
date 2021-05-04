@@ -7,6 +7,7 @@ import json
 from config import TRANSLATION_CONFIG
 from threading import Thread
 import random
+import smtplib, ssl
 
 
 class TranslatorNode(BTPeer):
@@ -18,7 +19,6 @@ class TranslatorNode(BTPeer):
         self.register_server = register_server
         handlers = {
             "TRAN": self.handle_translate,
-            "ACKT": self.handle_translation_response,
             "DISC": self.handle_discovery,
             "REGR": self.handle_register_reply,
             "DISR": self.handle_discovery_reply
@@ -84,11 +84,7 @@ class TranslatorNode(BTPeer):
         host, port, text = translation_request['requester'].split(
             ":")[0], translation_request['requester'].split(":")[1], translation_request['message']
         translated_text = self.translate(text)
-        msg = create_translation_response_message(
-            translation_request, self.myid, translated_text)
-        cmp = json.dumps(msg)
-        self.connectandsend(host, port, "ACKN", cmp,
-                            pid=self.myid, waitreply=False)
+        self.send_email(translated_text,translation_request["email"])
 
     def translate(self, text):
         subscription_key = 'bfcfe92f1fa842e6a5cf95f622345b2c'
@@ -110,9 +106,31 @@ class TranslatorNode(BTPeer):
         print(response)
         return response[0]['translations'][0]['text']
 
-    def handle_translation_response(self, peerconn, translation_response):
-        msg = json.loads(translation_response)
-        print(msg["Message"])
+    def send_email(self, translated_text, email):
+            # TODO: Should send email to user with the data.
+            smtp_server = "smtp.gmail.com"
+            port = 587  # For starttls
+            sender_email = "imagetranslator214@gmail.com"
+            password = "translateImage"
+            receiver_email = email
+            context = ssl.create_default_context()
+            message = """\
+    Subject: Request Ready
+
+    Your translated text is : """ + translated_text
+            # Try to log in to server and send email
+            try:
+                server = smtplib.SMTP(smtp_server, port)
+                server.ehlo()  # Can be omitted
+                server.starttls(context=context)  # Secure the connection
+                server.ehlo()  # Can be omitted
+                server.login(sender_email, password)
+                server.sendmail(sender_email, receiver_email, message)
+            except Exception as e:
+                # Print any error messages to stdout
+                print(e)
+            finally:
+                server.quit()
 
     def handle_forward(self, peerconn, translation_request):
         msg = json.loads(translation_request)
