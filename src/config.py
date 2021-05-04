@@ -11,7 +11,7 @@ TRANSLATION_CONFIG = {
 
 IOT_GATEWAY_CONFIG = {
     # URL outdated need to update next time deploy.
-    "url": "https://c02zu014q2.execute-api.eu-central-1.amazonaws.com/prod/message/",
+    "url": "https://k3ot37muwe.execute-api.eu-central-1.amazonaws.com/prod/message/",
     "b_interface_topic": "broker_interface",
     "b_transcriptor_topic": "broker_transcriptor"
 
