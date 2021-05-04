@@ -7,8 +7,11 @@ import json
 from config import TRANSLATION_CONFIG
 import random
 
+from btpeer import BTPeer
+from threading import Thread
 
-class TranslatorNode(BTPeer):
+
+class TranslatorNode(BTPeer,Thread):
     def __init__(self, maxpeers, serverport, name, register_server):
         BTPeer.__init__(self, maxpeers, serverport)
         self.region = "IT"
@@ -24,8 +27,11 @@ class TranslatorNode(BTPeer):
         }
         for m_type in handlers.keys():
             self.addhandler(m_type, handlers[m_type])
+        self.registered=False
+        Thread.__init__(self)
 
     def handle_register_reply(self, peerconn, register_reply):
+        self.registered=True
         print("I am ready to serve")
         register_reply = json.loads(register_reply)
         peerid, peeradd = register_reply["node_info"]
@@ -123,15 +129,17 @@ class TranslatorNode(BTPeer):
         print(msg["Message"])
 
     def register(self):
-        host, port = self.register_server.split(":")
-        msg = create_message(self.myid, self.name, self.myid,
-                             random.randint(0, 100000), "REGS")
-        cmp = json.dumps(msg)
-        self.connectandsend(host, port, "REGS", cmp,
-                            pid=self.myid, waitreply=False)
+        while not self.registered:
+            host, port = self.register_server.split(":")
+            msg = create_message(self.myid, self.name, self.myid,
+                                 random.randint(0, 100000), "REGS")
+            cmp = json.dumps(msg)
+            self.connectandsend(host, port, "REGS", cmp,
+                                pid=self.myid, waitreply=False)
 
     def main(self):
-        self.register()
+        reg_thread = Thread(target=self.register)
+        reg_thread.start()
         self.mainloop()
 
 
