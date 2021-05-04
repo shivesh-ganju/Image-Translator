@@ -12,10 +12,12 @@ import traceback
 def btdebug(msg):
     """ Prints a messsage to the screen with the name of the current thread """
     print(
-    "[%s] %s" % (str(threading.currentThread().getName()), msg)
-	)
+        "[%s] %s" % (str(threading.currentThread().getName()), msg)
+    )
 
 # ==============================================================================
+
+
 class BTPeer:
     """ Implements the core functionality that might be used by a peer in a
     P2P network.
@@ -85,12 +87,13 @@ class BTPeer:
         self.__debug('Connected ' + str(clientsock.getpeername()))
 
         host, port = clientsock.getpeername()
-        #print(clientsock.getpeername())
+        # print(clientsock.getpeername())
         peerconn = BTPeerConnection(None, host, port, clientsock, debug=False)
 
         try:
             msgtype, msgdata = peerconn.recvdata()
-            if msgtype: msgtype = msgtype.upper()
+            if msgtype:
+                msgtype = msgtype.upper()
             if msgtype not in self.handlers:
                 self.__debug('Not handled: %s: %s' % (msgtype, msgdata))
             else:
@@ -201,7 +204,7 @@ class BTPeer:
     # --------------------------------------------------------------------------
     def removepeerat(self, loc):
         # --------------------------------------------------------------------------
-        self.removepeer(self, loc)
+        self.removepeer(loc)
 
     # --------------------------------------------------------------------------
     def getpeerids(self):
@@ -297,7 +300,6 @@ class BTPeer:
         except Exception as e:
             traceback.print_exc()
 
-
         return msgreply
 
     # end connectsend method
@@ -327,7 +329,8 @@ class BTPeer:
         self.peerlock.acquire()
         try:
             for pid in todelete:
-                if pid in self.peers: del self.peers[pid]
+                if pid in self.peers:
+                    del self.peers[pid]
         finally:
             self.peerlock.release()
 
@@ -384,7 +387,7 @@ class BTPeerConnection:
         self.id = peerid
         self.debug = debug
         self.testHost = host
-        self.testPort=port
+        self.testPort = port
 
         if not sock:
             self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -420,17 +423,17 @@ class BTPeerConnection:
         or False if there was an error.
         """
 
-        #try:
+        # try:
         msg = self.__makemsg(msgtype, msgdata)
         self.sd.write(msg)
         self.sd.flush()
-        #except KeyboardInterrupt:
+        # except KeyboardInterrupt:
         #    raise
 
-            # print("Hello")
-            # if self.debug:
-            #     traceback.print_exc()
-            # return False
+        # print("Hello")
+        # if self.debug:
+        #     traceback.print_exc()
+        # return False
         return True
 
     # --------------------------------------------------------------------------
@@ -445,20 +448,21 @@ class BTPeerConnection:
 
         try:
             msg = self.sd.read()
-            msgtype,msg = msg.split('-')[0],msg.split('-')[1]
-            if not msgtype: return (None, None)
+            msgtype, msg = msg.split('-')[0], msg.split('-')[1]
+            if not msgtype:
+                return (None, None)
 
             # lenstr = self.sd.read(4)
             # print(lenstr)
             # msglen = int(struct.unpack("!L", lenstr)[0])
             # msg = ""
-			#
+                #
             # while len(msg) != msglen:
             #     data = self.sd.read(min(2048, msglen - len(msg)))
             #     if not len(data):
             #         break
             #     msg += data
-			#
+                #
             # if len(msg) != msglen:
             #     return (None, None)
 
@@ -490,8 +494,4 @@ class BTPeerConnection:
     # --------------------------------------------------------------------------
     def __str__(self):
         # --------------------------------------------------------------------------
-        return "|%s|" % peerid
-
-
-
-
+        return "|%s|" % self.id
