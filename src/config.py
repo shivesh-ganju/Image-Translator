@@ -16,3 +16,5 @@ IOT_GATEWAY_CONFIG = {
     "b_transcriptor_topic": "broker_transcriptor"
 
 }
+
+TRANSCRIPTION_PORT =  4567

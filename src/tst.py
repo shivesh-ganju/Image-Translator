@@ -1,8 +1,7 @@
 from btpeer import *
 from utils import *
 import json
-
-
+import base64
 class TranslatorNode(BTPeer):
     def __init__(self, maxpeers, serverport, neighbourport, id, nid):
         BTPeer.__init__(self, maxpeers, serverport)
@@ -26,14 +25,18 @@ class TranslatorNode(BTPeer):
     def main(self):
         # TODO: When creating a translation  request should also give user email.
         # Only user interface will ever create a translation request.
-        data = create_translation_request_message(
-            1, self.myid, "GR", self.myid, "Translate this sentence in french", "testmail@mail.com")
+        #data = create_translation_request_message(
+        #    16, self.myid, "ES", self.myid, "I walk a lonely road and only one that I have ever known, dont know where it goes but its the only one I have ever known", "shiveshganju@gmail.com")
+        image = open('para.png', 'rb') #open binary file in read mode
+        image_read = image.read()
+        image_64_encode = base64.encodebytes(image_read).decode("utf-8")
+        data = create_transcription_request_message(
+            19, self.myid, "GR", self.myid,"shiveshganju@gmail.com",image_64_encode)
         data = json.dumps(data)
-        self.connectandsend('52.207.203.252', 1234, "TRAN",
+        self.connectandsend('localhost', 4567, "TRSC",
                             data, pid=self.myid, waitreply=False)
 
-
-a = TranslatorNode(100, 4321, 4444, "A", "D")
+a = TranslatorNode(100, 8888, 3333, "A", "D")
 a.main()
 # import json
 # a = {

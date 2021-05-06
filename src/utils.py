@@ -14,6 +14,18 @@ def create_translation_request_message(id, sender, region, requester, text, emai
     }
     return message
 
+def create_transcription_request_message(id, sender, region, requester, email, image):
+    message = {
+        "sender": sender,
+        "region": region,
+        "requester": requester,
+        "id": id,
+        "type": "TRSC",
+        "email": email,
+        "image":image
+    }
+    return message
+
 
 def create_translation_response_message(translation_request, sender, translated_text):
     message = {

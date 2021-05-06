@@ -404,7 +404,7 @@ class BTPeerConnection:
         msglen = len(msgdata)
         #m = {"type":msgtype,"data":msgdata}
         #msg = pickle.dumps(m)
-        msg = str(msgtype)+"-"+str(msgdata)
+        msg = str(msgtype)+str(msgdata)
         return msg
 
     # --------------------------------------------------------------------------
@@ -448,7 +448,7 @@ class BTPeerConnection:
 
         try:
             msg = self.sd.read()
-            msgtype, msg = msg.split('-')[0], msg.split('-')[1]
+            msgtype, msg = msg[:4], msg[4:]
             if not msgtype:
                 return (None, None)
 
