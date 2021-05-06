@@ -77,7 +77,7 @@ class TranslatorNode(BasePeer):
                 server.starttls(context=context)  # Secure the connection
                 server.ehlo()  # Can be omitted
                 server.login(sender_email, password)
-                server.sendmail(sender_email, receiver_email, message)
+                server.sendmail(sender_email, receiver_email, message.encode('utf-8'))
             except Exception as e:
                 # Print any error messages to stdout
                 print(e)
