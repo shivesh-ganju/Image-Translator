@@ -9,65 +9,18 @@ import random
 from threading import Thread
 import time
 import smtplib, ssl
+from basepeer import BasePeer
 
-class TranslatorNode(BTPeer):
+class TranslatorNode(BasePeer):
     def __init__(self, maxpeers, serverport, name, register_server):
-        BTPeer.__init__(self, maxpeers, serverport)
+        BasePeer.__init__(self, maxpeers, serverport, name, register_server)
         self.region = "ES"
-        self.name = name
-        self.register_server = register_server
-        self.requests = set()
         handlers = {
-            "TRAN": self.handle_translate,
-            "DISC": self.handle_discovery,
-            "REGR": self.handle_register_reply,
-            "DISR": self.handle_discovery_reply
+            "TRAN": self.handle_translate
         }
         self.registered=False
         for m_type in handlers.keys():
             self.addhandler(m_type, handlers[m_type])
-
-    def handle_register_reply(self, peerconn, register_reply):
-        self.registered=True
-        print("I am ready to serve")
-        register_reply = json.loads(register_reply)
-        peerid, peeradd = register_reply["node_info"]
-        if peerid == "unk":
-            print("I am the first node in the P2P")
-            return
-        if register_reply["id"] in self.requests:
-            return
-        self.requests.add(register_reply["id"])
-        peerhost, peerport = peeradd.split(":")
-        msg = create_message(self.myid, self.name, self.myid,
-                             random.randint(0, 1000000), "DISC")
-        self.connectandsend(peerhost, peerport, "DISC", json.dumps(
-            msg), pid=self.myid, waitreply=False)
-
-    def handle_discovery(self, peerconn, discovery_message):
-        discovery_message = json.loads(discovery_message)
-        if discovery_message["id"] in self.requests:
-            return
-        self.requests.add(discovery_message["id"])
-        peerid, peeradd = discovery_message["node_info"]
-        for id in self.getpeerids():
-            (host, port) = self.getpeer(id)
-            self.connectandsend(host, port, "DISC", json.dumps(
-                discovery_message), self.myid, waitreply=False)
-        reply = create_message(self.myid, self.name,
-                               self.myid, random.randint(0, 1000000), "DISR")
-        self.addpeer(peerid, peeradd.split(":")[0], peeradd.split(":")[1])
-        self.connectandsend(peeradd.split(":")[0], peeradd.split(
-            ":")[1], "DISR", json.dumps(reply), self.myid, waitreply=False)
-
-    def handle_discovery_reply(self, peerconn, discovery_reply_message):
-        discovery_message = json.loads(discovery_reply_message)
-        if discovery_message["id"] in self.requests:
-            return
-        self.requests.add(discovery_message["id"])
-        peerid, peeradd = discovery_message["node_info"]
-        print("Added peer {}".format(peerid))
-        self.addpeer(peerid, peeradd.split(":")[0], peeradd.split(":")[1])
 
     def handle_translate(self, peerconn, translation_request):
         translation_request = json.loads(translation_request)
@@ -106,19 +59,7 @@ class TranslatorNode(BTPeer):
         print(response)
         return response[0]['translations'][0]['text']
 
-    def handle_forward(self, peerconn, translation_request):
-        msg = json.loads(translation_request)
-        if msg["id"] in self.requests:
-            return
-
-        self.requests.add(msg["id"])
-        for peerid in self.getpeerids():
-            (host, port) = self.getpeer(peerid)
-            self.connectandsend(host, port, msg["type"], json.dumps(
-                translation_request), pid=self.myid, waitreply=False)
-
     def send_email(self, translated_text, email):
-            # TODO: Should send email to user with the data.
             smtp_server = "smtp.gmail.com"
             port = 587  # For starttls
             sender_email = "imagetranslator214@gmail.com"
@@ -142,23 +83,6 @@ class TranslatorNode(BTPeer):
                 print(e)
             finally:
                 server.quit()
-
-    def register(self):
-        while self.registered==False:
-            host, port = self.register_server.split(":")
-            msg = create_message(self.myid, self.name, self.myid,
-                                 random.randint(0, 100000), "REGS")
-            cmp = json.dumps(msg)
-            self.connectandsend(host, port, "REGS", cmp,
-                                pid=self.myid, waitreply=False)
-            time.sleep(5)
-
-    def main(self):
-        reg = Thread(target=self.register)
-        reg.start()
-#        self.register()
-        self.mainloop()
-
 
 node = TranslatorNode(
     100, TRANSLATION_CONFIG["es"], "es", 'localhost:'+str(TRANSLATION_CONFIG["regr"]))
