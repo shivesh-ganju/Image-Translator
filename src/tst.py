@@ -33,7 +33,7 @@ class TranslatorNode(BTPeer):
         data = create_transcription_request_message(
             23, self.myid, "IT", self.myid,"shiveshganju@gmail.com",image_64_encode)
         data = json.dumps(data)
-        self.connectandsend('18.219.27.16', 4567, "TRSC",
+        self.connectandsend('localhost', 1111, "TRSC",
                             data, pid=self.myid, waitreply=False)
 
 a = TranslatorNode(100, 8888, 3333, "A", "D")

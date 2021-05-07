@@ -26,11 +26,12 @@ class TranslatorNode(BasePeer):
         if translation_request["id"] in self.requests:
             return
         if self.region != translation_request["region"]:
-            self.requests.add(translation_request["id"])
-            for peerid in self.getpeerids():
-                (host, port) = self.getpeer(peerid)
-                self.connectandsend(host, port, "TRAN", json.dumps(
-                    translation_request), pid=self.myid, waitreply=False)
+            # for peerid in self.getpeerids():
+            #     (host, port) = self.getpeer(peerid)
+            #     self.connectandsend(host, port, "TRAN", json.dumps(
+            #         translation_request), pid=self.myid, waitreply=False)
+            # return
+            self.handle_forward(peerconn,json.dumps(translation_request))
             return
 
         self.requests.add(translation_request["id"])
@@ -85,5 +86,5 @@ class TranslatorNode(BasePeer):
                 server.quit()
 
 node = TranslatorNode(
-    100, TRANSLATION_CONFIG["fr"], "fr", 'localhost:'+str(TRANSLATION_CONFIG["regr"]))
+    100, TRANSLATION_CONFIG["fr"], "translation", 'localhost:'+str(TRANSLATION_CONFIG["regr"]))
 node.main()

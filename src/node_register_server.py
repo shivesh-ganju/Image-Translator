@@ -1,11 +1,9 @@
 from btpeer import *
-import os
-import requests
-import uuid
 import json
 from utils import *
 from config import TRANSLATION_CONFIG
 import random
+import os
 
 
 class RegisterationServer(BTPeer):
@@ -25,6 +23,8 @@ class RegisterationServer(BTPeer):
         for m_type in handlers.keys():
             self.addhandler(m_type, handlers[m_type])
         self.nodes = {}
+        if os.path.exists('broker-info.txt'):
+            os.remove('broker-info.txt')
 
     def handle_register(self, peerconn, registration_request):
         registration_request = json.loads(registration_request)

@@ -1,18 +1,13 @@
 from btpeer import *
 from utils import *
 import os
-import requests
-import uuid
 import json
 from config import TRANSCRIPTION_PORT,TRANSLATION_CONFIG
 import random
-import time
-import smtplib, ssl
 from basepeer import BasePeer
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from msrest.authentication import CognitiveServicesCredentials
-from PIL import Image
-import base64 
+import base64
 
 class TranscriptionNode(BasePeer):
     def __init__(self, maxpeers, serverport, name, register_server):
@@ -35,10 +30,12 @@ class TranscriptionNode(BasePeer):
         extracted_text = str(self.transcript(encoded_img))
         translation_request = create_translation_request_message(random.randint(0, 100000), self.myid, transcription_request["region"], 
                                                  transcription_request["requester"], extracted_text, transcription_request["email"])
-        for peerid in self.getpeerids():
-            (host, port) = self.getpeer(peerid)
-            self.connectandsend(host, port, "TRAN", json.dumps(
-                translation_request), pid=self.myid, waitreply=False)
+
+        # for peerid in self.getpeerids():
+        #     (host, port) = self.getpeer(peerid)
+        #     self.connectandsend(host, port, "TRAN", json.dumps(
+        #         translation_request), pid=self.myid, waitreply=False)
+        self.handle_forward(peerconn,json.dumps(translation_request))
         
     def transcript(self, encoded_img):
         subscription_key = "cd154ff8fedd40cf8cb02bada9cdce69"

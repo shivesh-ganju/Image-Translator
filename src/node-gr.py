@@ -26,17 +26,18 @@ class TranslatorNode(BasePeer):
         if translation_request["id"] in self.requests:
             return
         if self.region != translation_request["region"]:
-            self.requests.add(translation_request["id"])
-            for peerid in self.getpeerids():
-                (host, port) = self.getpeer(peerid)
-                self.connectandsend(host, port, "TRAN", json.dumps(
-                    translation_request), pid=self.myid, waitreply=False)
+            # for peerid in self.getpeerids():
+            #     (host, port) = self.getpeer(peerid)
+            #     self.connectandsend(host, port, "TRAN", json.dumps(
+            #         translation_request), pid=self.myid, waitreply=False)
+            # return
+            self.handle_forward(peerconn,json.dumps(translation_request))
             return
         self.requests.add(translation_request["id"])
         host, port, text = translation_request['requester'].split(
             ":")[0], translation_request['requester'].split(":")[1], translation_request['message']
         translated_text = self.translate(text)
-        self.send_email(translated_text,translation_request["email"])
+        self.send_email(translated_text,json.dumps(translation_request["email"]))
 
     def translate(self, text):
         subscription_key = 'bfcfe92f1fa842e6a5cf95f622345b2c'
@@ -85,5 +86,5 @@ class TranslatorNode(BasePeer):
                 server.quit()
 
 node = TranslatorNode(
-    100, TRANSLATION_CONFIG["gr"], "gr", 'localhost:'+str(TRANSLATION_CONFIG["regr"]))
+    100, TRANSLATION_CONFIG["gr"], "translation", 'localhost:'+str(TRANSLATION_CONFIG["regr"]))
 node.main()
