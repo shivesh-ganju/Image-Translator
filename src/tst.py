@@ -27,13 +27,13 @@ class TranslatorNode(BTPeer):
         # Only user interface will ever create a translation request.
         #data = create_translation_request_message(
         #    16, self.myid, "ES", self.myid, "I walk a lonely road and only one that I have ever known, dont know where it goes but its the only one I have ever known", "shiveshganju@gmail.com")
-        image = open('para.png', 'rb') #open binary file in read mode
+        image = open('pic3.gif', 'rb') #open binary file in read mode
         image_read = image.read()
         image_64_encode = base64.encodebytes(image_read).decode("utf-8")
         data = create_transcription_request_message(
-            19, self.myid, "GR", self.myid,"shiveshganju@gmail.com",image_64_encode)
+            23, self.myid, "IT", self.myid,"shiveshganju@gmail.com",image_64_encode)
         data = json.dumps(data)
-        self.connectandsend('localhost', 4567, "TRSC",
+        self.connectandsend('18.219.27.16', 4567, "TRSC",
                             data, pid=self.myid, waitreply=False)
 
 a = TranslatorNode(100, 8888, 3333, "A", "D")

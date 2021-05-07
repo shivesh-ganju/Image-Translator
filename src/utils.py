@@ -47,11 +47,12 @@ def create_duplicate_response():
     return message
 
 
-def create_message(sender, nodeid, nodeinfo, id, m_type):
+def create_message(sender, nodeid, nodeinfo, id, m_type,node_type="translation"):
     message = {
         "sender": sender,
         "id": id,
         "node_info": (nodeid, nodeinfo),
-        "type": m_type
+        "type": m_type,
+        "ntype":node_type
     }
     return message

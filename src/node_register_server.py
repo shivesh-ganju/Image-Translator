@@ -17,7 +17,6 @@ class RegisterationServer(BTPeer):
             "ACKT": self.handle_forward,
             "DISC": self.handle_forward,
             "REGS": self.handle_register,
-            # "DUPL":self.handle_duplicate,
             "REGR": self.handle_forward,
             "BINT": self.handle_forward,
             "BTCR": self.handle_forward,
@@ -33,6 +32,11 @@ class RegisterationServer(BTPeer):
         req = registration_request["id"]
         name, addr = registration_request["node_info"]
         host, port = addr.split(":")
+        if registration_request["ntype"]=="BROKER":
+            file=open("broker-info.txt","a")
+            line=addr+"\n"
+            file.write(line)
+            file.close()
         if req in self.requests:
             cmp = json.dumps(create_duplicate_response())
             self.connectandsend(host, port, "DUPL", cmp,

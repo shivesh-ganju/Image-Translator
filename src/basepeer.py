@@ -13,7 +13,10 @@ class BasePeer(BTPeer):
         handlers = {
             "DISC": self.handle_discovery,
             "REGR": self.handle_register_reply,
-            "DISR": self.handle_discovery_reply
+            "DISR": self.handle_discovery_reply,
+            "BINT": self.handle_forward,
+            "BTCR": self.handle_forward,
+            "TRSC": self.handle_forward
         }
         self.registered=False
         for m_type in handlers.keys():
@@ -86,7 +89,11 @@ class BasePeer(BTPeer):
     def register(self):
         while self.registered==False:
             host, port = self.register_server.split(":")
-            msg = create_message(self.myid, self.name, self.myid,
+            if self.name=="broker":
+                msg = create_message(self.myid, self.name, self.myid,
+                                     random.randint(0, 100000), "REGS","BROKER")
+            else:
+                msg = create_message(self.myid, self.name, self.myid,
                                  random.randint(0, 100000), "REGS")
             cmp = json.dumps(msg)
             self.connectandsend(host, port, "REGS", cmp,
