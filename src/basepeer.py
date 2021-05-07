@@ -104,8 +104,6 @@ class BasePeer(BTPeer):
         self.requests.add(msg["id"])
         if self.message_node_mapping[msg["type"]] in self.peerType:
             nodelist = self.peerType[self.message_node_mapping[msg["type"]]]
-            print(nodelist)
-            print(self.peerType)
             for node in nodelist:
                 (host, port) = node.split(":")
                 self.connectandsend(host, port, msg["type"], json.dumps(
