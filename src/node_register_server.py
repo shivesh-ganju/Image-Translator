@@ -23,8 +23,8 @@ class RegisterationServer(BTPeer):
         for m_type in handlers.keys():
             self.addhandler(m_type, handlers[m_type])
         self.nodes = {}
-        if os.path.exists('broker-info.txt'):
-            os.remove('broker-info.txt')
+        if os.path.exists('interface-info.txt'):
+            os.remove('interface-info.txt')
 
     def handle_register(self, peerconn, registration_request):
         registration_request = json.loads(registration_request)
@@ -32,9 +32,9 @@ class RegisterationServer(BTPeer):
         req = registration_request["id"]
         name, addr = registration_request["node_info"]
         host, port = addr.split(":")
-        if registration_request["ntype"]=="BROKER":
-            file=open("broker-info.txt","a")
-            line=addr+"\n"
+        if registration_request["ntype"] == "INTERFACE":
+            file = open("interface-info.txt", "a")
+            line = addr+"\n"
             file.write(line)
             file.close()
         if req in self.requests:
