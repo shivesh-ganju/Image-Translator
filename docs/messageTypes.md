@@ -3,8 +3,10 @@
 The service is built in a peer to peer architecture, where each node within the network provides a specific service. In total we have 4 different node types:
 
 **Interface node**
-Will be the node the user interacts with and uploads their (picture, email) and pays using meta mask.
-Publishes “transcription” tasks to broker nodes.
+Will be the node the user interacts with and uploads their (picture, email, region) and pays using meta mask.
+Publishes “transcription” (BTCR) tasks to broker nodes.
+
+Initially a local web server (port 3000) running on each interface node will send an "INIT" message to the p2p node running on port 1119. i.e. Each interface node will be running 2 processes - a web server for the client to interface with and a standard btpeer node. For more information on the web server please refer to the following repo: [trozler/interface_nodes_blockchain](https://github.com/trozler/interface_nodes_btpeer.git).
 
 **Broker node**
 Will publish messages from Interface and Transcription nodes.

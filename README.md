@@ -20,21 +20,24 @@ Steps to run this on EC2
    - Registration node `python3 src/node_register_server`.
    - Translation node `python3 src/node_it.py`.
    - Broker node `python3 src/node_broker.py`
+   - Interface node `python3 src/node_interface.py`
+
+## Interface node additional required steps to run
+
+If you want to run an `interface node` you also have do do the following:
+
+```
+git clone https://github.com/trozler/interface_nodes_btpeer.git
+cd interface_nodes_blockchain
+npm i
+npm run build
+node app.js
+```
+
+For more information on the web server please refer to the following repo: [trozler/interface_nodes_btpeer](https://github.com/trozler/interface_nodes_btpeer.git).
 
 ## IoT Api gateway
 
 This project makes use of an IoT API gateway. The gateway is used to captured the state of the broker nodes.
 
 The repo containing the code used to deploy the IoT gateway can be found at [trozler/image_translator_iotgateway](https://github.com/trozler/image_translator_iotgateway).
-
-## Linting and formatting suggestion
-
-It will be useful for our code to be formatted in the same way, as won't pollute pull requests.
-I'm currently using `autopep8` it can be installed using:
-
-```
-pip install pep8
-pip install --upgrade autopep8
-```
-
-NOTE: I'm open to using any other linter.
