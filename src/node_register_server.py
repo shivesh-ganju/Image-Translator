@@ -35,7 +35,7 @@ class RegisterationServer(BTPeer):
         host, port = addr.split(":")
         if registration_request["ntype"] == "INTERFACE":
             file = open("interface-info.txt", "a")
-            line = addr+"\n"
+            line = host+":3000"+"\n"
             file.write(line)
             file.close()
         if req in self.requests:
