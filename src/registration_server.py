@@ -8,8 +8,6 @@ app.config["DEBUG"] = True
 def home():
     return "Registration Server"
 
-# TODO: Should be interface node IP returned.
-
 
 @app.route('/interface-node', methods=['GET'])
 def get_broker_info():

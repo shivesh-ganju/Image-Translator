@@ -11,3 +11,4 @@ artifacts
 artifacts/
 coverage/
 __pycache__
+interface-info.txt

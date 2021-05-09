@@ -18,7 +18,8 @@ class RegisterationServer(BTPeer):
             "REGR": self.handle_forward,
             "BINT": self.handle_forward,
             "BTCR": self.handle_forward,
-            "TRSC": self.handle_forward
+            "TRSC": self.handle_forward,
+            "INIT": self.handle_forward
         }
         for m_type in handlers.keys():
             self.addhandler(m_type, handlers[m_type])
