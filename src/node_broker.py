@@ -3,7 +3,7 @@ import requests
 import json
 from config import TRANSLATION_CONFIG, IOT_GATEWAY_CONFIG
 from datetime import datetime
-
+import random
 
 b_interface_topic = IOT_GATEWAY_CONFIG["b_interface_topic"]
 b_transcriptor_topic = IOT_GATEWAY_CONFIG["b_transcriptor_topic"]
@@ -29,12 +29,12 @@ class BrokerNode(BasePeer):
 
         self.requests.add(msg["id"])
         self.__update_iot(b_interface_topic, msg["id"])
-
+        new_msg=create_transcription_request_message(random.randint(0,1000000), msg["sender"], msg["region"], msg["requester"],msg["email"],msg["image"])
         for peerid in self.getpeerids():
             (host, port) = self.getpeer(peerid)
             # Update message type, as going to transcription node.
             self.connectandsend(host, port, "TRSC",
-                                translation_request, pid=self.myid, waitreply=False)
+                                json.dumps(new_msg), pid=self.myid, waitreply=False)
 
     def __handle_transcription_broker_request(self, peerconn, translation_request):
         msg = json.loads(translation_request)
@@ -43,12 +43,12 @@ class BrokerNode(BasePeer):
 
         self.requests.add(msg["id"])
         self.__update_iot(b_transcriptor_topic, msg["id"])
-
+        new_msg=create_translation_request_message(random.randint(0,1000000), msg["sender"], msg["region"], msg["requester"],msg["message"],msg["email"])
         for peerid in self.getpeerids():
             (host, port) = self.getpeer(peerid)
             # Update message type, as going to transcription node.
             self.connectandsend(host, port, "TRAN",
-                                translation_request, pid=self.myid, waitreply=False)
+                                json.dumps(new_msg), pid=self.myid, waitreply=False)
 
     def __update_iot(self, topic, newMessageId):
         """
