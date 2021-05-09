@@ -17,10 +17,10 @@
 
    e.g.
 
-   - Registration node `python3 src/node_register_server`.
-   - Translation node `python3 src/node_it.py`.
-   - Broker node `python3 src/node_broker.py`
-   - Interface node `python3 src/node_interface.py`
+   - Registration node `python3 node_register_server`.
+   - Translation node `python3 node_it.py`.
+   - Broker node `python3 node_broker.py`
+   - Interface node `python3 node_interface.py`
 
 ## Interface node additional required steps to run
 
