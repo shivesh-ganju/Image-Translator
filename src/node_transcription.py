@@ -29,7 +29,7 @@ class TranscriptionNode(BasePeer):
         encoded_img = transcription_request["image"]
         extracted_text = str(self.transcript(encoded_img))
         translation_request = create_translation_request_message(random.randint(0, 100000), self.myid, transcription_request["region"], 
-                                                 transcription_request["requester"], extracted_text, transcription_request["email"])
+                                                 transcription_request["requester"], extracted_text, transcription_request["email"],type="BTCR")
 
         # for peerid in self.getpeerids():
         #     (host, port) = self.getpeer(peerid)

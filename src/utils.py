@@ -1,5 +1,5 @@
 
-def create_translation_request_message(id, sender, region, requester, text, email):
+def create_translation_request_message(id, sender, region, requester, text, email,type="TRAN"):
     """
     Only interface node will ever use create_translation_request_message.
     """
@@ -9,18 +9,18 @@ def create_translation_request_message(id, sender, region, requester, text, emai
         "requester": requester,
         "id": id,
         "message": text,
-        "type": "TRAN",
+        "type": type,
         "email": email
     }
     return message
 
-def create_transcription_request_message(id, sender, region, requester, email, image):
+def create_transcription_request_message(id, sender, region, requester, email, image,m_type="TRSC"):
     message = {
         "sender": sender,
         "region": region,
         "requester": requester,
         "id": id,
-        "type": "TRSC",
+        "type": m_type,
         "email": email,
         "image":image
     }
