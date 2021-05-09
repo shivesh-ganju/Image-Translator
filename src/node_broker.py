@@ -4,7 +4,7 @@ import json
 from config import TRANSLATION_CONFIG, IOT_GATEWAY_CONFIG
 from datetime import datetime
 import random
-
+from utils import *
 b_interface_topic = IOT_GATEWAY_CONFIG["b_interface_topic"]
 b_transcriptor_topic = IOT_GATEWAY_CONFIG["b_transcriptor_topic"]
 
@@ -35,6 +35,7 @@ class BrokerNode(BasePeer):
             # Update message type, as going to transcription node.
             self.connectandsend(host, port, "TRSC",
                                 json.dumps(new_msg), pid=self.myid, waitreply=False)
+        self.handle_forward(peerconn,json.dumps(new_msg))
 
     def __handle_transcription_broker_request(self, peerconn, translation_request):
         msg = json.loads(translation_request)
@@ -49,6 +50,7 @@ class BrokerNode(BasePeer):
             # Update message type, as going to transcription node.
             self.connectandsend(host, port, "TRAN",
                                 json.dumps(new_msg), pid=self.myid, waitreply=False)
+        #self.handle_forward(peerconn, json.dumps(new_msg))
 
     def __update_iot(self, topic, newMessageId):
         """
