@@ -28,7 +28,7 @@ If you want to run an `interface node` you also have to install the following re
 
 ```
 git clone https://github.com/trozler/interface_nodes_btpeer.git
-cd interface_nodes_blockchain
+cd interface_nodes_btpeer
 npm i
 npm run build
 node app.js
