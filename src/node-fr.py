@@ -7,8 +7,10 @@ from utils import *
 from config import TRANSLATION_CONFIG
 from threading import Thread
 import random
-import smtplib, ssl
+import smtplib
+import ssl
 from basepeer import BasePeer
+
 
 class TranslatorNode(BasePeer):
     def __init__(self, maxpeers, serverport, name, register_server):
@@ -17,7 +19,7 @@ class TranslatorNode(BasePeer):
         handlers = {
             "TRAN": self.handle_translate
         }
-        self.registered=False
+        self.registered = False
         for m_type in handlers.keys():
             self.addhandler(m_type, handlers[m_type])
 
@@ -31,14 +33,14 @@ class TranslatorNode(BasePeer):
             #     self.connectandsend(host, port, "TRAN", json.dumps(
             #         translation_request), pid=self.myid, waitreply=False)
             # return
-            self.handle_forward(peerconn,json.dumps(translation_request))
+            self.handle_forward(peerconn, json.dumps(translation_request))
             return
 
         self.requests.add(translation_request["id"])
         host, port, text = translation_request['requester'].split(
             ":")[0], translation_request['requester'].split(":")[1], translation_request['message']
         translated_text = self.translate(text)
-        self.send_email(translated_text,translation_request["email"])
+        self.send_email(translated_text, translation_request["email"])
 
     def translate(self, text):
         subscription_key = 'bfcfe92f1fa842e6a5cf95f622345b2c'
@@ -60,30 +62,31 @@ class TranslatorNode(BasePeer):
         return response[0]['translations'][0]['text']
 
     def send_email(self, translated_text, email):
-            # TODO: Should send email to user with the data.
-            smtp_server = "smtp.gmail.com"
-            port = 587  # For starttls
-            sender_email = "imagetranslator214@gmail.com"
-            password = "translateImage"
-            receiver_email = email
-            context = ssl.create_default_context()
-            message = """\
+        smtp_server = "smtp.gmail.com"
+        port = 587  # For starttls
+        sender_email = "imagetranslator214@gmail.com"
+        password = "translateImage"
+        receiver_email = email
+        context = ssl.create_default_context()
+        message = """\
     Subject: Request Ready
 
     Your translated text is : """ + translated_text
-            # Try to log in to server and send email
-            try:
-                server = smtplib.SMTP(smtp_server, port)
-                server.ehlo()  # Can be omitted
-                server.starttls(context=context)  # Secure the connection
-                server.ehlo()  # Can be omitted
-                server.login(sender_email, password)
-                server.sendmail(sender_email, receiver_email, message.encode('utf-8'))
-            except Exception as e:
-                # Print any error messages to stdout
-                print(e)
-            finally:
-                server.quit()
+        # Try to log in to server and send email
+        try:
+            server = smtplib.SMTP(smtp_server, port)
+            server.ehlo()  # Can be omitted
+            server.starttls(context=context)  # Secure the connection
+            server.ehlo()  # Can be omitted
+            server.login(sender_email, password)
+            server.sendmail(sender_email, receiver_email,
+                            message.encode('utf-8'))
+        except Exception as e:
+            # Print any error messages to stdout
+            print(e)
+        finally:
+            server.quit()
+
 
 node = TranslatorNode(
     100, TRANSLATION_CONFIG["fr"], "translation", 'localhost:'+str(TRANSLATION_CONFIG["regr"]))

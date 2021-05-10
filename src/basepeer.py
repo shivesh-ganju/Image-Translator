@@ -12,6 +12,8 @@ class BasePeer(BTPeer):
         self.requests = set()
         self.name = name
         self.register_server = register_server
+        self.ext_ip = None
+
         handlers = {
             "DISC": self.handle_discovery,
             "REGR": self.handle_register_reply,
@@ -125,7 +127,7 @@ class BasePeer(BTPeer):
                                      random.randint(0, 100000), "REGS", "BROKER")
             if self.name == "interface":
                 msg = create_message(self.myid, self.name, self.myid,
-                                     random.randint(0, 100000), "REGS", "INTERFACE",ext_ip=self.ext_ip)
+                                     random.randint(0, 100000), "REGS", "INTERFACE", ext_ip=self.ext_ip)
             if self.name == "transcription":
                 msg = create_message(self.myid, self.name, self.myid,
                                      random.randint(0, 100000), "REGS", "TRANSCRIPTION")
