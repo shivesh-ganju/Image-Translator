@@ -1,37 +1,78 @@
 # Image-Translator
 
-## How to run using EC2 VMs
+## How to run using EC2 instances
 
-1. Launch an EC2 instance in the same region us-east-1
+1. Launch an EC2 instance in the same region us-east-1.
 
 2. Configure the security group of the EC2, add rules under Inbound like this
    2.1) All TCP 0-65535 0.0.0.0
    2.2) All UDP 0-65535 0.0.0.0
-   3.) Assign an Elastic IP for your EC2. Available in the left tab on the EC2 Dashboard
+   3.) Assign an Elastic IP for your EC2. Found in the left tab on the EC2 Dashboard.
    4.) Do ssh-keygen on ec2-server and ping me the ssh keys.
 
 3. Run program as followed
-   a) Run `git clone https://github.com/shivesh-ganju/Image-Translator.git`
-   b) Install dependencies by running `pip install -r requirements.txt`
-   c) Run the corresponding node `.py` files.
+   a) Run `git clone https://github.com/shivesh-ganju/Image-Translator.git` on each VM.
+   b) Install dependencies by running `pip install -r requirements.txt` on each VM.
+   c) Run the nodes in this order:
 
-   e.g.
+   ```
+   // VM1
+   python3 registration_server.py  // Front end.
+   python3 node_register_server.py // Back end.
 
-   - Registration node `python3 node_register_server`.
-   - Translation node `python3 node_it.py`.
-   - Broker node `python3 node_broker.py`
-   - Interface node `python3 node_interface.py`
+   // VM2
+   python3 node_interface.py       // Back end.
+   /* Also start interface front end see below. */
+
+   // VM3
+   python3 node_broker.py
+   /* Need to also deploy IoT gateway see below. */
+
+   // VM4
+   python3 node_transcription.py
+
+   // VM5
+   python3 node-it.py
+
+   // VM6
+   python3 node-gr.py
+
+   // VM7
+   python3 node-fr.py
+
+   // VM8
+   python3 node-es.py
+   ```
+
+4. Interact with application - User flow:
+   a) Send a GET request to registration server front end. You will know this IP.
+
+   ```
+   curl http://<ip of registration_server VM>:8080/interface-node
+
+   ////////////////////////////////
+   {
+      "nodes": [
+          "192.168.1.35:1119"
+      ]
+   }
+   ////////////////////////////////
+   ```
+
+   b) Open up returned URL in browser and interact with application.
 
 ## Interface node additional required steps to run
 
 If you want to run an `interface node` you also have to install the following repo:
 
 ```
+
 git clone https://github.com/trozler/interface_nodes_btpeer.git
 cd interface_nodes_btpeer
 npm i
 npm run build
 node app.js
+
 ```
 
 For more information on the web server, which uses Ethereum for payments, please refer to [trozler/interface_nodes_btpeer](https://github.com/trozler/interface_nodes_btpeer.git).
