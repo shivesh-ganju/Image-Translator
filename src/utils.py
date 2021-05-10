@@ -47,12 +47,13 @@ def create_duplicate_response():
     return message
 
 
-def create_message(sender, nodeid, nodeinfo, id, m_type,node_type="translation"):
+def create_message(sender, nodeid, nodeinfo, id, m_type,node_type="translation",ext_ip="none"):
     message = {
         "sender": sender,
         "id": id,
         "node_info": (nodeid, nodeinfo),
         "type": m_type,
-        "ntype":node_type
+        "ntype":node_type,
+        "extip":ext_ip
     }
     return message
