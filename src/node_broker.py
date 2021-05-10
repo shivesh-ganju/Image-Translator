@@ -27,14 +27,13 @@ class BrokerNode(BasePeer):
         if msg["id"] in self.requests:
             return
 
-        self.requests.add(msg["id"])
         self.__update_iot(b_interface_topic, msg["id"])
         new_msg=create_transcription_request_message(random.randint(0,1000000), msg["sender"], msg["region"], msg["requester"],msg["email"],msg["image"])
-        for peerid in self.getpeerids():
-            (host, port) = self.getpeer(peerid)
-            # Update message type, as going to transcription node.
-            self.connectandsend(host, port, "TRSC",
-                                json.dumps(new_msg), pid=self.myid, waitreply=False)
+        # for peerid in self.getpeerids():
+        #     (host, port) = self.getpeer(peerid)
+        #     # Update message type, as going to transcription node.
+        #     self.connectandsend(host, port, "TRSC",
+        #                         json.dumps(new_msg), pid=self.myid, waitreply=False)
         self.handle_forward(peerconn,json.dumps(new_msg))
 
     def __handle_transcription_broker_request(self, peerconn, translation_request):
@@ -42,15 +41,14 @@ class BrokerNode(BasePeer):
         if msg["id"] in self.requests:
             return
 
-        self.requests.add(msg["id"])
         self.__update_iot(b_transcriptor_topic, msg["id"])
         new_msg=create_translation_request_message(random.randint(0,1000000), msg["sender"], msg["region"], msg["requester"],msg["message"],msg["email"])
-        for peerid in self.getpeerids():
-            (host, port) = self.getpeer(peerid)
-            # Update message type, as going to transcription node.
-            self.connectandsend(host, port, "TRAN",
-                                json.dumps(new_msg), pid=self.myid, waitreply=False)
-        #self.handle_forward(peerconn, json.dumps(new_msg))
+        # for peerid in self.getpeerids():
+        #     (host, port) = self.getpeer(peerid)
+        #     # Update message type, as going to transcription node.
+        #     self.connectandsend(host, port, "TRAN",
+        #                         json.dumps(new_msg), pid=self.myid, waitreply=False)
+        self.handle_forward(peerconn, json.dumps(new_msg))
 
     def __update_iot(self, topic, newMessageId):
         """
