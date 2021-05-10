@@ -2,7 +2,16 @@
 
 The Image translator service is built on a peer to peer architecture, where each node provides a specific service.
 
-**In total we have 4 different node types.**
+**In total we have 5 different node types.**
+
+### Registration node
+
+The registration node has two functions:
+
+1. It is the node where all other nodes register themselves.
+2. It is also acts as the gateway for users into the p2p network, by returning the IP of an _Interface node_ on a curl request.
+
+The IP of the registration server is always known. If the registration server goes offline, then in theory another node will create a registration server. This provides some element of fault tolerance.
 
 ### Interface node
 

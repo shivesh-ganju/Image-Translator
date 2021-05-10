@@ -1,5 +1,33 @@
 # Image-Translator
 
+## IoT Api gateway
+
+Before running the project an IoT gateway needs to be created. The gateway is used to captured the state of the broker nodes and allows you to visualise the state of the network.
+
+The repo containing the code used to deploy the IoT gateway can be found at [trozler/image_translator_iotgateway](https://github.com/trozler/image_translator_iotgateway).
+
+**Then run the project in the following way:**
+
+```
+
+git clone https://github.com/trozler/image_translator_iotgateway
+cd image_translator_iotgateway
+npm i
+npm run build
+cdk synth
+cdk diff
+cdk deploy
+
+```
+
+This will return a url similar to:
+
+```
+https://c02zu014q2.execute-api.eu-central-1.amazonaws.com/prod/message/
+```
+
+When you run the framework on each VM, please update the url in `Image-Translator/src/config.py`.
+
 ## How to run using EC2 instances
 
 1. Launch an EC2 instance in the same region us-east-1.
@@ -76,9 +104,3 @@ node app.js
 ```
 
 For more information on the web server, which uses Ethereum for payments, please refer to [trozler/interface_nodes_btpeer](https://github.com/trozler/interface_nodes_btpeer.git).
-
-## IoT Api gateway
-
-This project makes use of an IoT API gateway. The gateway is used to captured the state of the broker nodes.
-
-The repo containing the code used to deploy the IoT gateway can be found at [trozler/image_translator_iotgateway](https://github.com/trozler/image_translator_iotgateway).
