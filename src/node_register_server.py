@@ -1,4 +1,4 @@
-from btpeer import *
+from btpeer import BTPeer
 import json
 from utils import *
 from config import TRANSLATION_CONFIG

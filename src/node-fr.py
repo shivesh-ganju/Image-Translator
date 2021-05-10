@@ -1,4 +1,3 @@
-from btpeer import *
 import os
 import requests
 import uuid

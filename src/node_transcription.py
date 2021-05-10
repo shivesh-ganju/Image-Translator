@@ -1,4 +1,3 @@
-from btpeer import *
 from utils import *
 import os
 import json
