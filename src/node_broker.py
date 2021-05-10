@@ -28,13 +28,14 @@ class BrokerNode(BasePeer):
             return
 
         self.__update_iot(b_interface_topic, msg["id"])
-        new_msg=create_transcription_request_message(random.randint(0,1000000), msg["sender"], msg["region"], msg["requester"],msg["email"],msg["image"])
+        new_msg = create_transcription_request_message(random.randint(
+            0, 1000000), msg["sender"], msg["region"], msg["requester"], msg["email"], msg["image"])
         # for peerid in self.getpeerids():
         #     (host, port) = self.getpeer(peerid)
         #     # Update message type, as going to transcription node.
         #     self.connectandsend(host, port, "TRSC",
         #                         json.dumps(new_msg), pid=self.myid, waitreply=False)
-        self.handle_forward(peerconn,json.dumps(new_msg))
+        self.handle_forward(peerconn, json.dumps(new_msg))
 
     def __handle_transcription_broker_request(self, peerconn, translation_request):
         msg = json.loads(translation_request)
@@ -42,7 +43,8 @@ class BrokerNode(BasePeer):
             return
 
         self.__update_iot(b_transcriptor_topic, msg["id"])
-        new_msg=create_translation_request_message(random.randint(0,1000000), msg["sender"], msg["region"], msg["requester"],msg["message"],msg["email"])
+        new_msg = create_translation_request_message(random.randint(
+            0, 1000000), msg["sender"], msg["region"], msg["requester"], msg["message"], msg["email"])
         # for peerid in self.getpeerids():
         #     (host, port) = self.getpeer(peerid)
         #     # Update message type, as going to transcription node.
