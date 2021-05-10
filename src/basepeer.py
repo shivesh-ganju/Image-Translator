@@ -125,7 +125,7 @@ class BasePeer(BTPeer):
                                      random.randint(0, 100000), "REGS", "BROKER")
             if self.name == "interface":
                 msg = create_message(self.myid, self.name, self.myid,
-                                     random.randint(0, 100000), "REGS", "INTERFACE")
+                                     random.randint(0, 100000), "REGS", "INTERFACE",ext_ip=self.ext_ip)
             if self.name == "transcription":
                 msg = create_message(self.myid, self.name, self.myid,
                                      random.randint(0, 100000), "REGS", "TRANSCRIPTION")

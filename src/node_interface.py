@@ -3,6 +3,7 @@ import requests
 import json
 from config import TRANSLATION_CONFIG
 from utils import create_translation_request_message, create_transcription_request_message
+import urllib.request, json
 
 
 class InterfaceNode(BasePeer):
@@ -22,6 +23,8 @@ class InterfaceNode(BasePeer):
         }
         for m_type in handlers.keys():
             self.addhandler(m_type, handlers[m_type])
+        data = json.loads(urllib.request.urlopen("http://ip.jsontest.com/").read())
+        self.ext_ip=data["ip"]
 
     def __handle_interface_initial_request(self, peerconn, init_request):
         msg = json.loads(init_request)
