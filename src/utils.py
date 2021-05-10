@@ -1,5 +1,5 @@
 
-def create_translation_request_message(id, sender, region, requester, text, email,type="TRAN"):
+def create_translation_request_message(id, sender, region, requester, text, email, m_type="TRAN"):
     """
     Only interface node will ever use create_translation_request_message.
     """
@@ -9,12 +9,13 @@ def create_translation_request_message(id, sender, region, requester, text, emai
         "requester": requester,
         "id": id,
         "message": text,
-        "type": type,
+        "type": m_type,
         "email": email
     }
     return message
 
-def create_transcription_request_message(id, sender, region, requester, email, image,m_type="TRSC"):
+
+def create_transcription_request_message(id, sender, region, requester, email, image, m_type="TRSC"):
     message = {
         "sender": sender,
         "region": region,
@@ -22,7 +23,7 @@ def create_transcription_request_message(id, sender, region, requester, email, i
         "id": id,
         "type": m_type,
         "email": email,
-        "image":image
+        "image": image
     }
     return message
 
@@ -47,13 +48,13 @@ def create_duplicate_response():
     return message
 
 
-def create_message(sender, nodeid, nodeinfo, id, m_type,node_type="translation",ext_ip="none"):
+def create_message(sender, nodeid, nodeinfo, id, m_type, node_type="translation", ext_ip="none"):
     message = {
         "sender": sender,
         "id": id,
         "node_info": (nodeid, nodeinfo),
         "type": m_type,
-        "ntype":node_type,
-        "extip":ext_ip
+        "ntype": node_type,
+        "extip": ext_ip
     }
     return message
