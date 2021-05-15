@@ -31,13 +31,13 @@ _Message types:_
 
 Broker nodes will publish messages from Interface and Transcription nodes.
 
-They will also send messages to subscribed Transcription and Translation nodes.
+They will also send messages to Transcription and Translation nodes.
 
 Example flow:
 
 1. If an Interface node publishes a message, the broker will add the message to the queue and send it to a Transcription node
 
-   - Receiving message type will be _“BINT”_ in BTPeer.
+   - Receiving message type will be BINT in BTPeer.
    - Send a message out using _"TRSC"_.
 
 2. If a Transcription node publishes a message, the broker will add it to the queue and send it to a Translation node.
@@ -50,11 +50,11 @@ Example flow:
 
 ### Transcription node
 
-1. All Transcription nodes will subscribe to messages from all broker nodes.
+1. All Transcription nodes will listen to messages from all broker nodes.
    - Receiving message type from broker node is _TRSC_.
 
 ### Translation node
 
-1. All Translation nodes will subscribe to messages from all broker nodes.
+1. All Translation nodes will listen to messages from all broker nodes.
    - Will also send email to users containing final results.
    - Receiving message type from broker node is _“TRAN”_.
