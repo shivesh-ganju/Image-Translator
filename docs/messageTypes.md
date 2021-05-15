@@ -37,7 +37,7 @@ Example flow:
 
 1. If an Interface node publishes a message, the broker will add the message to the queue and send it to a Transcription node
 
-   - Receiving message type will be BINT in BTPeer.
+   - Receiving message type will be _"BINT"_ in BTPeer.
    - Send a message out using _"TRSC"_.
 
 2. If a Transcription node publishes a message, the broker will add it to the queue and send it to a Translation node.
